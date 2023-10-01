@@ -20,13 +20,13 @@ public class InventorySlotScript : MonoBehaviour, IBeginDragHandler, IDragHandle
 
     private void Awake()
     {
-        image = GetComponent<Image>();  
+        image = GetComponent<Image>();
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
         originalPosition = transform.position;
         originalParent = transform.parent;
-        transform.SetParent(transform.root);  
+        transform.SetParent(canvasTransform);  
         image.raycastTarget = false;
     }
 
@@ -44,8 +44,6 @@ public class InventorySlotScript : MonoBehaviour, IBeginDragHandler, IDragHandle
 
     public void OnEndDrag(PointerEventData eventData)
     {
-
-
         transform.SetParent(originalParent);
 
 

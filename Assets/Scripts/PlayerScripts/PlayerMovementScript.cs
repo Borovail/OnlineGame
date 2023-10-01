@@ -48,6 +48,7 @@ public partial class PlayerMovementScript : NetworkBehaviour
 
     Rigidbody2D myRigidBody;
     Animator animator;
+    Canvas UI;
 
     private void Awake()
     {
@@ -55,13 +56,17 @@ public partial class PlayerMovementScript : NetworkBehaviour
 
         animator = GetComponent<Animator>();
 
+        UI = GameObject.Find("UI").GetComponent<Canvas>() ;
 
+        UI.worldCamera = Camera.main;
     }
 
 
 
     private void Update()
     {
+        if (InventoryScript.isInventoryOpen) return;
+
         Move();
         HandlePlayerAttack();
         HandlePlayerBlock();

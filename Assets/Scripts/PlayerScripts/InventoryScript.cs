@@ -10,47 +10,88 @@ using UnityEngine.UI;
 
 public class InventoryScript : MonoBehaviour
 {
-
-    [SerializeField]
-    private List<GameObject>   gameItems;
-
-    [SerializeField]
-    private List<GameObject> inventoryItems;
+    public static bool isInventoryOpen=false;
 
 
     [SerializeField]
-    GameObject inventoryItem;
+    private GameObject mainInventoryHolder;
+    [SerializeField]
+    private Button inventoryBackgroundBtn;
+    [SerializeField]
+    private GameObject itemInventoryHolder;
+    [SerializeField]
+    private Button openCloseInventory;
+
+
+
+
+   [SerializeField]
+    private List<GameObject>   gameLoot;
+
+    [SerializeField]
+    private List<GameObject> inventorySlots;
+
 
 
 
     private bool isPickUpAllowed = false;
 
-    private GameObject targetItem;
+    private GameObject targetLoot;
 
-    private GameObject selectedItem;
+    private GameObject selectedSlot;
 
     private int selectedButtonId = 0;
 
 
+
+    private void Awake()
+    {
+        openCloseInventory.onClick.AddListener(()=>SetActivity(true));
+        inventoryBackgroundBtn.onClick.AddListener(()=> SetActivity(false));
+
+    }
+
+  void  SetActivity(bool state) 
+        {
+        isInventoryOpen = state;
+
+        openCloseInventory.gameObject.SetActive(!state);
+
+        mainInventoryHolder.SetActive(state);
+
+        itemInventoryHolder.SetActive(state);
+    } 
+
+
+
     private void LateUpdate()
     {
-        if (isPickUpAllowed && Input.GetKeyDown(KeyCode.E))
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if(isInventoryOpen)
+            SetActivity(false);
+            else SetActivity(true);
+
+        }
+
+        if (isPickUpAllowed && Input.GetKeyDown(KeyCode.F))
         {
 
-            gameItems.Add(targetItem);
+            gameLoot.Add(targetLoot);
 
             //Destroy(targetItem);
 
-            AddToInventory(targetItem);
+            AddToInventory(targetLoot);
         }
 
         SelectItem();
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if(selectedItem != null)
+            if(selectedSlot != null)
             {
-                ThrowOutItem(selectedItem);
+                ThrowOutItem(selectedSlot);
             }
         }
 
@@ -60,13 +101,13 @@ public class InventoryScript : MonoBehaviour
     {
 
         if (EventSystem.current.currentSelectedGameObject == null) return;
-        selectedItem = null;
+        selectedSlot = null;
 
 
 
         if (!int.TryParse(EventSystem.current.currentSelectedGameObject.transform.parent.name, out selectedButtonId)) return;
 
-        selectedItem = gameItems[selectedButtonId];
+        selectedSlot = inventorySlots[selectedButtonId]?.transform.GetChild(0).gameObject ;
     }
 
 
@@ -77,7 +118,7 @@ public class InventoryScript : MonoBehaviour
         {
             isPickUpAllowed = true;
 
-            targetItem = collision.gameObject;
+            targetLoot = collision.gameObject;
 
            
 
@@ -93,7 +134,7 @@ public class InventoryScript : MonoBehaviour
 
             isPickUpAllowed = false;
 
-            targetItem = null;
+            targetLoot = null;
 
         }
     }
@@ -115,24 +156,24 @@ public class InventoryScript : MonoBehaviour
 
         spriteRender.sortingOrder = 3;
 
-        gameItems.Remove(item);
+        gameLoot.Remove(item);
 
-        Destroy(inventoryItems[selectedButtonId].transform.GetChild(0).gameObject);
+        Destroy(inventorySlots[selectedButtonId].transform.GetChild(0).gameObject);
 
     }
 
 
     void AddToInventory(GameObject gameObject)
     {
-        gameObject.transform.SetParent(inventoryItems.First(i=>i.transform.childCount==0).transform,false);
+        gameObject.transform.SetParent(inventorySlots.First(i=>i.transform.childCount==0).transform,false);
     }
 
 
     void UpdateInventory()
     {
-        foreach (var inventoryItem in inventoryItems)
+        foreach (var inventoryItem in inventorySlots)
         {
-            foreach (var gameItem in gameItems)
+            foreach (var gameItem in gameLoot)
             {
                 inventoryItem.GetComponent<Image>().sprite = gameItem.GetComponent<SpriteRenderer>().sprite;
             }
