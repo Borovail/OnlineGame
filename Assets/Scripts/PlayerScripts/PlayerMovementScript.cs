@@ -58,6 +58,7 @@ public partial class PlayerMovementScript : NetworkBehaviour
     Animator animator;
     Canvas UI;
     AudioSource audioSource;
+    SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
@@ -66,6 +67,7 @@ public partial class PlayerMovementScript : NetworkBehaviour
         animator = GetComponent<Animator>();
 
         audioSource  = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         UI = GameObject.Find("UI").GetComponent<Canvas>() ;
 
@@ -247,6 +249,7 @@ public partial class PlayerMovementScript : NetworkBehaviour
     {
         audioSource.clip = getHit_AudioClip;
         audioSource.Play();
+        StartCoroutine(DamageEffect());
 
         Debug.Log("Player get hit");
 
@@ -267,7 +270,15 @@ public partial class PlayerMovementScript : NetworkBehaviour
         }
     }
 
+    IEnumerator DamageEffect()
+    {
+        spriteRenderer.color = Color.red;
 
+        yield return new WaitForSeconds(0.5f);
+
+        spriteRenderer.color = Color.white;
+
+    }
 
     // Проверка, касается ли игрок земли
     private void OnCollisionEnter2D(Collision2D collision)

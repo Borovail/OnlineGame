@@ -1,5 +1,6 @@
 ﻿
 using Assets.Scripts.ScriptHelper;
+using Mono.Cecil.Rocks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,8 +49,9 @@ namespace Assets.Scripts.MonsterFolder
         /// <summary>
         /// //монстр не поварачивается потому что нужно оффсет юзать нужно  а   .transform.localScale 
         /// </summary>
-
-
+        SpriteRenderer handRenderer;
+        SpriteRenderer legRenderer;
+        SpriteRenderer bodyRender;
         private void Awake()
         {
             // Находим нужные объекты
@@ -57,9 +59,9 @@ namespace Assets.Scripts.MonsterFolder
             Transform leftHand = body.Find("Arm Left");
             Transform leftLeg = transform.Find("Leg Left");
 
-            SpriteRenderer handRenderer = leftHand.GetComponent<SpriteRenderer>();
-            SpriteRenderer legRenderer = leftLeg.GetComponent<SpriteRenderer>();
-            SpriteRenderer bodyRender = body.GetComponent<SpriteRenderer>();
+             handRenderer = leftHand.GetComponent<SpriteRenderer>();
+             legRenderer = leftLeg.GetComponent<SpriteRenderer>();
+             bodyRender = body.GetComponent<SpriteRenderer>();
 
             bodyRender.sortingOrder = 1;
             handRenderer.sortingOrder = 0;
@@ -213,6 +215,7 @@ namespace Assets.Scripts.MonsterFolder
         {
             myAudioSource.clip = getHit_AudioClip;
             myAudioSource.Play();
+         StartCoroutine(   DamageEffect());
 
 
             Health -= damage;
@@ -228,6 +231,17 @@ namespace Assets.Scripts.MonsterFolder
 
             return null;
         }
+
+        IEnumerator DamageEffect()
+        {
+            bodyRender .color = Color.red;
+
+            yield return new WaitForSeconds(0.5f);
+
+            bodyRender.color = Color.white;
+
+        }
+
 
         IEnumerator DestroyMonster()
         {
@@ -248,11 +262,11 @@ namespace Assets.Scripts.MonsterFolder
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.tag == "Player")
+            if (collision.gameObject.CompareTag( "Player"))
             {
                 collision.gameObject.GetComponent<PlayerMovementScript>().GetDamage(TouchDamage);
             }
-            if (collision.gameObject.tag == "Ground")
+            if (collision.gameObject.CompareTag("Ground"))
             {
                 isJumping = false;
             }
