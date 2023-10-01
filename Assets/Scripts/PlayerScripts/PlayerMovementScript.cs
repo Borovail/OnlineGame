@@ -13,6 +13,14 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 public partial class PlayerMovementScript : NetworkBehaviour
 {
     [SerializeField]
+    AudioClip getHit_AudioClip;
+
+    [SerializeField]
+    AudioClip levelUp_AudioClip;
+
+
+
+    [SerializeField]
     private float playerRunSpeed = 10f;
 
     [SerializeField]
@@ -49,12 +57,15 @@ public partial class PlayerMovementScript : NetworkBehaviour
     Rigidbody2D myRigidBody;
     Animator animator;
     Canvas UI;
+    AudioSource audioSource;
 
     private void Awake()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
 
         animator = GetComponent<Animator>();
+
+        audioSource  = GetComponent<AudioSource>();
 
         UI = GameObject.Find("UI").GetComponent<Canvas>() ;
 
@@ -84,14 +95,17 @@ public partial class PlayerMovementScript : NetworkBehaviour
 
             HandlePlayerRun(movementX);
         }
-        else
+        else 
         {
 
             HandlePlayerWalk(movementX);
         }
+  
     }
     private void HandlePlayerWalk(float movementX)
     {
+
+
         transform.position += new Vector3(movementX, 0f, 0f) * Time.deltaTime * playerWalkSpeed;
 
         if (movementX != 0)
@@ -103,10 +117,11 @@ public partial class PlayerMovementScript : NetworkBehaviour
         {
             animator.SetBool("IsWalking", false);
         }
+
     }
 
     private void HandlePlayerRun(float movementX)
-    {
+    { 
 
         transform.position += new Vector3(movementX, 0f, 0f) * Time.deltaTime * playerRunSpeed;
 
@@ -230,6 +245,8 @@ public partial class PlayerMovementScript : NetworkBehaviour
 
     public void GetDamage(int damage)
     {
+        audioSource.clip = getHit_AudioClip;
+        audioSource.Play();
 
         Debug.Log("Player get hit");
 

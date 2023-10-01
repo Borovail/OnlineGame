@@ -14,12 +14,15 @@ namespace Assets.Scripts.MonsterFolder
 {
     public class Monster : MonoBehaviour
     {
+        [SerializeField]
+        AudioClip getHit_AudioClip;
+
 
         CapsuleCollider2D myCollider;
-
         Rigidbody2D myRigidBody;
-
         Animator myAnimator;
+        AudioSource myAudioSource;
+
 
         public float offset = 0.2f;
         public float JumpPower = 2f;
@@ -66,10 +69,11 @@ namespace Assets.Scripts.MonsterFolder
             myCollider = GetComponent<CapsuleCollider2D>();
             myRigidBody = GetComponent<Rigidbody2D>();
             myAnimator = GetComponent<Animator>();
+            myAudioSource = GetComponent<AudioSource>();
 
             if (Health == 0)
             {
-                Health = 15;
+                Health = 20;
             }
             if (Damage == 0)
             {
@@ -155,15 +159,12 @@ namespace Assets.Scripts.MonsterFolder
             RayCastThrower.color = Color.black;
             var groundObj =RayCastThrower.ThrowRayCast(transform.position.x, transform.position.y, 1f,new Vector2(rotation.x,-1f));
 
-            if (groundObj == null || groundObj.CompareTag("Ground")) return;
+            if (groundObj == null || !groundObj.CompareTag("Ground")) return;
             
                 //if (!isJumping)
                 //JumpOverVoid(rotation.x * 2);
             
                 transform.position += new Vector3(rotation.x, 0f, 0f) * 1 * Time.deltaTime;
-
-
-
 
 
             myAnimator.SetBool("isMoving",true);
@@ -210,22 +211,30 @@ namespace Assets.Scripts.MonsterFolder
 
         public virtual Loot TakeDamage(int damage)
         {
-            Debug.Log("damage: " + damage  +"         health   " +Health );
+            myAudioSource.clip = getHit_AudioClip;
+            myAudioSource.Play();
 
-            Debug.Log("Monster get hit");
+
             Health -= damage;
 
-            if (Health < 0)
+            if (Health <= 0)
             {
-                Destroy(gameObject);
-                Debug.Log("Monster killed");
+                StartCoroutine(DestroyMonster());
 
                 return Loot;
             }
 
+
+
             return null;
         }
 
+        IEnumerator DestroyMonster()
+        {
+            yield return new WaitForSeconds(0.2f);
+
+            Destroy(gameObject);
+        }
 
 
         protected virtual int Attack()
