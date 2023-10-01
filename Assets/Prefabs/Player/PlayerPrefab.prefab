@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 8139837731818063436}
   - component: {fileID: 1915743635119639011}
   - component: {fileID: 6966403393307671685}
-  - component: {fileID: 1308115571427681994}
   - component: {fileID: 1308115571427681993}
+  - component: {fileID: 1114590155}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -147,28 +147,6 @@ CapsuleCollider2D:
   m_Offset: {x: -0.12185669, y: -0.26031578}
   m_Size: {x: 1.1228333, y: 2.1163857}
   m_Direction: 0
---- !u!114 &1308115571427681994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6467513003472003884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ee2c0807eadf174b8ed99a070362f31, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerRunSpeed: 10
-  playerWalkSpeed: 5
-  attackRange: 5
-  attackAngle: 30
-  raysCount: 5
-  offset: 0.6
-  damage: 10
-  jumpForce: 5
-  isFacingRight: 1
-  gun: {fileID: 0}
 --- !u!114 &1308115571427681993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,3 +163,25 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1114590155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467513003472003884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ee2c0807eadf174b8ed99a070362f31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerRunSpeed: 5
+  playerWalkSpeed: 2
+  attackRange: 1.5
+  attackAngle: 40
+  raysCount: 3
+  offset: 0.2
+  damage: 10
+  jumpForce: 5
+  isFacingRight: 1
+  gun: {fileID: 0}

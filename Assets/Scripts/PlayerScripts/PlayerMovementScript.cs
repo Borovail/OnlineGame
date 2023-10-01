@@ -3,12 +3,14 @@ using Assets.Scripts.MonsterFolder;
 using Assets.Scripts.ScriptHelper;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
-public partial class  PlayerMovementScript : NetworkBehaviour
+public partial class PlayerMovementScript : NetworkBehaviour
 {
     [SerializeField]
     private float playerRunSpeed = 10f;
@@ -35,9 +37,9 @@ public partial class  PlayerMovementScript : NetworkBehaviour
     [SerializeField]
     public float jumpForce = 5f;
 
-    private float  movementX;
-    private  float movementY;
-    private bool isJumping = false ,block = false;
+    private float movementX;
+    private float movementY;
+    private bool isJumping = false, block = false;
     public bool isFacingRight = true;
 
     [SerializeField]
@@ -49,7 +51,7 @@ public partial class  PlayerMovementScript : NetworkBehaviour
 
     private void Awake()
     {
-        myRigidBody =GetComponent<Rigidbody2D>();
+        myRigidBody = GetComponent<Rigidbody2D>();
 
         animator = GetComponent<Animator>();
 
@@ -72,13 +74,12 @@ public partial class  PlayerMovementScript : NetworkBehaviour
     {
         float movementX = Input.GetAxisRaw("Horizontal");
         HandlePlayerTurn(movementX);
-
         if (Input.GetKey(KeyCode.LeftControl))
         {
 
             HandlePlayerRun(movementX);
         }
-        else 
+        else
         {
 
             HandlePlayerWalk(movementX);
@@ -119,8 +120,7 @@ public partial class  PlayerMovementScript : NetworkBehaviour
     {
         if (horizontal == 0) return;
 
-        Vector2 direction = new Vector2(horizontal,1f);
-
+        Vector2 direction = new Vector2(horizontal, 1f);
         transform.localScale *= direction;
 
 
@@ -129,7 +129,7 @@ public partial class  PlayerMovementScript : NetworkBehaviour
         {
             transform.localScale = new Vector2(0.35f, 0.35f);
             isFacingRight = true;
-}
+        }
         else if (horizontal < 0)
         {
             transform.localScale = new Vector2(-0.35f, 0.35f);
@@ -152,26 +152,23 @@ public partial class  PlayerMovementScript : NetworkBehaviour
             animator.SetBool("IsAttacking", false);
         }
     }
-
-
     void PerformAttack()
     {
         HashSet<GameObject> hitObjects = new HashSet<GameObject>();
-
         Vector2 direction = isFacingRight ? Vector2.right : Vector2.left;
 
         RayCastThrower.color = Color.white;
-        hitObjects.AddRange( RayCastThrower.ThrowRayCast(transform.position.x, transform.position.y, attackRange, attackAngle, raysCount, direction));
+        hitObjects.AddRange(RayCastThrower.ThrowRayCasts(transform.position.x, transform.position.y, attackRange, attackAngle, raysCount, direction));
 
-        var hitObject = hitObjects.FirstOrDefault(i => i.tag == "Player" || i.tag == "Monster");
+        var hitObject = hitObjects.FirstOrDefault(i => i.CompareTag("Player") || i.CompareTag("Monster"));
 
         if (hitObject == null) return;
 
-                if (hitObject.tag == "Monster") 
-                 hitObject.GetComponent<Monster>().TakeDamage(damage);
-                
-                if (hitObject.tag == "Player")          
-                    hitObject.GetComponent<PlayerMovementScript>().GetDamage(damage);
+        if (hitObject.CompareTag("Monster"))
+            hitObject.GetComponent<Monster>().TakeDamage(damage);
+
+        if (hitObject.CompareTag("Player"))
+            hitObject.GetComponent<PlayerMovementScript>().GetDamage(damage);
     }
 
 
@@ -197,10 +194,10 @@ public partial class  PlayerMovementScript : NetworkBehaviour
             block = false;
 
             playerRunSpeed = 10f;
-        playerWalkSpeed = 5f;
+            playerWalkSpeed = 5f;
 
 
-}
+        }
     }
     private void HandlePlayerJump()
     {
@@ -214,7 +211,7 @@ public partial class  PlayerMovementScript : NetworkBehaviour
 
     void HandlePlayerDie()
     {
-              StartCoroutine(DieCoroutine());
+        StartCoroutine(DieCoroutine());
     }
     IEnumerator DieCoroutine()
     {
@@ -238,7 +235,7 @@ public partial class  PlayerMovementScript : NetworkBehaviour
         }
 
         _health -= damage;
-        Debug.Log("_health: "+ _health);
+        Debug.Log("_health: " + _health);
 
 
         if (_health < 0)
@@ -261,7 +258,7 @@ public partial class  PlayerMovementScript : NetworkBehaviour
 
 
 
- 
+
 
 
     private void CheckUserInputOnShoot()
@@ -273,6 +270,4 @@ public partial class  PlayerMovementScript : NetworkBehaviour
         }
 
     }
-
-
 }

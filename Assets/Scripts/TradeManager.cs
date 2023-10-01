@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class TradeManager : MonoBehaviour
 {
+
     private GameObject[] players;
+
+
+
+    public GameObject pads;
+
+
+    [SerializeField]
+    private Transform dsa;
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void LateUpdate()
+    private void Update()
     {
-        /// check other players radius
+        
     }
 }
