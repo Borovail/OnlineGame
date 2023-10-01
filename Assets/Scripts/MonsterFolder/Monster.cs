@@ -21,7 +21,8 @@ namespace Assets.Scripts.MonsterFolder
 
         Animator myAnimator;
 
-        public float offset = 0.2f; 
+        public float offset = 0.2f;
+        public float JumpPower = 2f;
 
 
 
@@ -31,11 +32,15 @@ namespace Assets.Scripts.MonsterFolder
 
         public int Damage = 0;
 
+        public int TouchDamage = 1;
+
+
         public Loot Loot;
 
 
         bool isPlayerAtTheRight;
         private bool isAttacking = false;
+        private bool isJumping = false;
 
         /// <summary>
         /// //монстр не поварачивается потому что нужно оффсет юзать нужно  а   .transform.localScale 
@@ -51,7 +56,9 @@ namespace Assets.Scripts.MonsterFolder
 
             SpriteRenderer handRenderer = leftHand.GetComponent<SpriteRenderer>();
             SpriteRenderer legRenderer = leftLeg.GetComponent<SpriteRenderer>();
+            SpriteRenderer bodyRender = body.GetComponent<SpriteRenderer>();
 
+            bodyRender.sortingOrder = 1;
             handRenderer.sortingOrder = 0;
             legRenderer.sortingOrder = 0;
 
@@ -66,40 +73,41 @@ namespace Assets.Scripts.MonsterFolder
             }
             if (Damage == 0)
             {
-                Damage = 1;
+                Damage = 5;
             }
         }
 
         private void LateUpdate()
         {
-            StartCoroutine(FacePlayer());
+            FacePlayer();
+
+            StartChasingPlayer();
 
             if (!isAttacking)
             {
                 isAttacking = true;
 
-            StartCoroutine(attackPlayer());
+                StartCoroutine(Attack(0.8f, 1f, 35, 3, Damage));
 
             }
+
+
         }
 
 
 
-        IEnumerator FacePlayer()
+        void FacePlayer()
         {
-
-            yield return new WaitForSeconds(0.5f);
-
             HashSet<GameObject> hitObjects = new HashSet<GameObject>();
 
             GameObject gameobj;
 
             RayCastThrower.color = Color.red;
-            hitObjects.AddRange(RayCastThrower.ThrowRayCast(transform.position.x, transform.position.y, 5, 40, 3, Vector2.left));
-            hitObjects.AddRange(RayCastThrower.ThrowRayCast(transform.position.x, transform.position.y, 5, 40, 3, Vector2.right));
+            hitObjects.AddRange(RayCastThrower.ThrowRayCasts(transform.position.x, transform.position.y, 5, 40, 3, Vector2.left));
+            hitObjects.AddRange(RayCastThrower.ThrowRayCasts(transform.position.x, transform.position.y, 5, 40, 3, Vector2.right));
 
 
-            gameobj = hitObjects.FirstOrDefault(i => i.tag == "Player");
+            gameobj = hitObjects.FirstOrDefault(i => i.CompareTag("Player"));
 
             if (gameobj != null)
             {
@@ -121,75 +129,81 @@ namespace Assets.Scripts.MonsterFolder
         }
 
 
-        //void StartChasingPlayer()
+        void StartChasingPlayer()
+        {
+            myAnimator.SetBool("isMoving", false);
+
+
+
+
+            HashSet<GameObject> hitObjects = new HashSet<GameObject>();
+
+            Vector2 rotation = isPlayerAtTheRight ? Vector2.left : Vector2.right;
+
+
+
+            GameObject playerObj;
+
+            RayCastThrower.color = Color.blue;
+            hitObjects.AddRange(RayCastThrower.ThrowRayCasts(transform.position.x, transform.position.y, 2, 30, 3, rotation));
+
+            playerObj = hitObjects.FirstOrDefault(i => i.CompareTag("Player"));
+            if (playerObj == null) return;
+
+
+
+            RayCastThrower.color = Color.black;
+            var groundObj =RayCastThrower.ThrowRayCast(transform.position.x, transform.position.y, 1f,new Vector2(rotation.x,-1f));
+
+            if (groundObj == null || groundObj.CompareTag("Ground")) return;
+            
+                //if (!isJumping)
+                //JumpOverVoid(rotation.x * 2);
+            
+                transform.position += new Vector3(rotation.x, 0f, 0f) * 1 * Time.deltaTime;
+
+
+
+
+
+            myAnimator.SetBool("isMoving",true);
+        }
+
+
+
+        //void JumpOverVoid(float x)
         //{
-        //    HashSet<GameObject> hitObjects = new HashSet<GameObject>();
+        //    isJumping = true;
 
-        //    Vector2 rotation = isPlayerAtTheRight ? Vector2.right : Vector2.left;
-
-        //    GameObject playerObj, gameObj;
-        //    hitObjects.AddRange(RayCastThrower.ThrowRayCast(transform.position.x, transform.position.y, 3, 40, 3, rotation));
-
-        //    playerObj = hitObjects.FirstOrDefault(i => i.tag == "Player");
-
-        //    if (playerObj == null) return;
-
-        //    if (playerObj.tag != "Player") return;
-
-        //    hitObjects.Clear();
-
-        //    hitObjects.AddRange(RayCastThrower.ThrowRayCast(transform.position.x, transform.position.y, 1, 0, 1, rotation));
-
-
-        //    transform.position += new Vector3(2 * rotation.x, 0f);
-
-
-
-
-
-
-
-
-
-        //    if (gameobj != null)
-        //    {
-        //        gameobj.GetComponent<PlayerMovementScript>().GetDamage(Damage);
-        //    }
-
+        //    myRigidBody.velocity = new Vector2(1 * x, JumpPower);
         //}
 
 
-        IEnumerator attackPlayer()
-        {
 
-            yield return new WaitForSeconds(0.5f);
+
+            IEnumerator Attack(float timeDelay,float rayDistance,float rayAngle,float RayCount,float damage)
+        {
+            yield return new WaitForSeconds(timeDelay);
 
             HashSet<GameObject> hitObjects = new HashSet<GameObject>();
 
             Vector2 rotation = isPlayerAtTheRight ? Vector2.left : Vector2.right;
 
             GameObject gameobj;
-            RayCastThrower.color = Color.yellow;
-            hitObjects.AddRange( RayCastThrower.ThrowRayCast(transform.position.x, transform.position.y, 1, 40, 3, rotation));
+            RayCastThrower.color = Color.green;
+            hitObjects.AddRange(RayCastThrower.ThrowRayCasts(transform.position.x, transform.position.y, rayDistance, rayAngle, RayCount, rotation));
 
-            gameobj = hitObjects.FirstOrDefault(i => i.tag == "Player");
+            gameobj = hitObjects.FirstOrDefault(i => i.CompareTag("Player"));
 
             if (gameobj != null)
             {
-                gameobj.GetComponent<PlayerMovementScript>().GetDamage(Damage);
+                myAnimator.SetTrigger("attack");
+                gameobj.GetComponent<PlayerMovementScript>().GetDamage((int)damage);
             }
 
             isAttacking = false;
-
         }
-
-
-
-
-        protected virtual void Move()
-        {
-
-        }
+        
 
 
 
@@ -220,5 +234,20 @@ namespace Assets.Scripts.MonsterFolder
 
             return Damage;
         }
+
+
+
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.tag == "Player")
+            {
+                collision.gameObject.GetComponent<PlayerMovementScript>().GetDamage(TouchDamage);
+            }
+            if (collision.gameObject.tag == "Ground")
+            {
+                isJumping = false;
+            }
+        }
+
     }
 }
