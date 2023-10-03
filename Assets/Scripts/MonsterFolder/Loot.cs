@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.GunFolder;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;

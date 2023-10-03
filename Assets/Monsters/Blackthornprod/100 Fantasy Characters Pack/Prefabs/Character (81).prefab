@@ -98,6 +98,8 @@ GameObject:
   - component: {fileID: -2368562858915491228}
   - component: {fileID: 3935744404979573508}
   - component: {fileID: 2338114587167342373}
+  - component: {fileID: 1067621761}
+  - component: {fileID: 1067621762}
   m_Layer: 0
   m_Name: Character (81)
   m_TagString: Monster
@@ -193,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 390f2df43da787d4a832653587b8e151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  getHit_AudioClip: {fileID: 8300000, guid: ecea99feab5527c4787b325ad717cd50, type: 3}
+  getHit_AudioClip: {fileID: 8300000, guid: 3e457062d007ee748905901342dd38a2, type: 3}
   offset: 0.2
   JumpPower: 5
   Health: 0
@@ -296,6 +298,36 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1067621761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500455673010058270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &1067621762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500455673010058270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 6497854414775871090}
 --- !u!1 &1500455673221174990
 GameObject:
   m_ObjectHideFlags: 0

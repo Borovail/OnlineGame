@@ -1,4 +1,4 @@
-using Assets.Scripts.GunFolder;
+
 using Assets.Scripts.MonsterFolder;
 using Assets.Scripts.ScriptHelper;
 using System.Collections;
@@ -8,7 +8,6 @@ using System.Linq;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public partial class PlayerMovementScript : NetworkBehaviour
 {
@@ -28,6 +27,9 @@ public partial class PlayerMovementScript : NetworkBehaviour
 
 
 
+
+
+
     public float attackRange = 3f;  // Дальность атаки
     public float attackAngle = 20f; // Угол "конуса" атаки в градусах
     public int raysCount = 3;       // Количество лучей в "конусе"
@@ -40,7 +42,6 @@ public partial class PlayerMovementScript : NetworkBehaviour
     private int _damage = 5;
 
     private int blockResistance = 10;
-
 
     [SerializeField]
     public float jumpForce = 5f;
@@ -69,16 +70,16 @@ public partial class PlayerMovementScript : NetworkBehaviour
         audioSource  = GetComponent<AudioSource>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        UI = GameObject.Find("UI").GetComponent<Canvas>() ;
+        //UI = GameObject.Find("UI").GetComponent<Canvas>() ;
 
-        UI.worldCamera = Camera.main;
+        //UI.worldCamera = Camera.main;
     }
 
 
 
     private void Update()
     {
-        if (InventoryScript.isInventoryOpen) return;
+        if (/*InventoryScript.isInventoryOpen *//*||*/!IsOwner) return;
 
         Move();
         HandlePlayerAttack();
@@ -215,8 +216,8 @@ public partial class PlayerMovementScript : NetworkBehaviour
 
             block = false;
 
-            playerRunSpeed = 10f;
-            playerWalkSpeed = 5f;
+            playerRunSpeed = 5f;
+            playerWalkSpeed = 3f;
 
 
         }
@@ -290,17 +291,4 @@ public partial class PlayerMovementScript : NetworkBehaviour
     }
 
 
-
-
-
-
-    private void CheckUserInputOnShoot()
-    {
-
-        if (Input.GetMouseButtonDown(0) && IsOwner)
-        {
-            gun.GetComponent<Gun>().SpawnBulletsServerRpc();
-        }
-
-    }
 }

@@ -1,103 +1,62 @@
 using Assets.Scripts.GameManagment;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class PlayerInitialization : MonoBehaviour
+public class PlayerInitialization : MonoBehaviour 
 {
-    [SerializeField]
-    private InputField nicknameInput;
-
-    [SerializeField]
-    private Text errorNickname;
-
-    [SerializeField]
-    private Button playButton;
+    public static PlayerInitialization Instance;
 
 
+    [SerializeField] InputField playerNicknameHolder;
+    [SerializeField] Text ErrorNicknameNotification;
 
 
+     bool isHost = true;
+
+    [SerializeField]   GameObject player;
 
 
 
 
-
-    [SerializeField]
-    GameObject player;
-
-
-
-  
-    AnimationClip[] newAnimations;
-
-
-
-
-     Animator animator;
-
-    [SerializeField]
-    AnimationClip[] defaultAnimations;
-
-
-    private void Awake()
+    private void Start()
     {
-        playButton.onClick.AddListener((CheckNicknameErrors));
-        nicknameInput.onValueChange.AddListener(nickNameChanged);
+        playerNicknameHolder.onValueChanged.AddListener((value)=> ErrorNicknameNotification.gameObject.SetActive(false));
+       
     }
 
 
-
-    void CheckNicknameErrors()
+    public void StartGame()
     {
-        if (string.IsNullOrWhiteSpace(nicknameInput.text))
-        {
-            errorNickname.gameObject.SetActive(true);
+        if (!CheckNickName()) return;
+        GameManager.Instance.InitializePlayer(player, isHost);
+    }
 
+    public void SetHost(bool state)
+    {
+        isHost = state;
+    }
+    
+    private bool CheckNickName()
+    {
+        if (string.IsNullOrWhiteSpace(playerNicknameHolder.text))
+        {
+            ErrorNicknameNotification.gameObject.SetActive(true);
+
+            return false;
         }
         else
         {
-            InitializeSkin();
+            player.name = playerNicknameHolder.text;
 
-            GameManager.Instance.Player = player;
-
-            EnterTheGame();
+            return true;
         }
     }
 
-    void EnterTheGame()
-    {
-        string name = GameManager.Instance.GetRandomId().ToString();
-
-        GameManager.Instance.EnterTheScene(name);
-    }
-
-
-    void nickNameChanged(string text)
-    {
-        errorNickname.gameObject.SetActive(false);
-    }
-
-
-    public void InitializeSkin ()
-    {
-        newAnimations = SkinLoader.GetAnimations(PlayerPrefs.GetString("Gender"), PlayerPrefs.GetString("SkinId"));
-
-        ReplaceAnimationClip();
-    }
-
-     void ReplaceAnimationClip()
-    {
-        animator = player.GetComponent<Animator>();
-
-        AnimatorOverrideController overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
-
-        for (int i = 0; i <7; i++)
-        {
-            overrideController[defaultAnimations[i]] = newAnimations[i];
-        }
-
-       animator.runtimeAnimatorController = overrideController;
-
-    }
+   
 }

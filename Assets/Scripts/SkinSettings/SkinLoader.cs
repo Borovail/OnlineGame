@@ -84,98 +84,98 @@ namespace Assets.Scripts.GameManagment
 
             Sprite[] spritesArray = Resources.LoadAll<Sprite>(basePath);
             List<Sprite> sprites = new List<Sprite>(spritesArray);
-
-            //CreateAnimations(sprites, newPath,animName,animationType);
+            sprites.Sort((s1, s2) => int.Parse(s1.name).CompareTo(int.Parse(s2.name)));
+            //CreateAnimations(sprites, newPath, animName, animationType);
 
             return sprites;
         }
 
 
-      //static  void CreateAnimations(List<Sprite> sprites, string pathToSaveFolder,string animName,AnimationType animationType)
-      //  {
-      //      if(animationType == AnimationType.Block)
-      //      {
-      //          AnimationClip riseAnimationClip = new AnimationClip();
-      //          riseAnimationClip.frameRate = 24;
-      //          riseAnimationClip.wrapMode = WrapMode.Once;
+        //static void CreateAnimations(List<Sprite> sprites, string pathToSaveFolder, string animName, AnimationType animationType)
+        //{
+        //    if (animationType == AnimationType.Block)
+        //    {
+        //        AnimationClip riseAnimationClip = new AnimationClip();
+        //        riseAnimationClip.frameRate = 24;
+        //        riseAnimationClip.wrapMode = WrapMode.Once;
 
-      //          AnimationClip lowerAnimationClip = new AnimationClip();
-      //          lowerAnimationClip.frameRate = 24;
-      //          lowerAnimationClip.wrapMode = WrapMode.Once;
-
-
-      //          EditorCurveBinding fspriteBinding = new EditorCurveBinding();
-      //          fspriteBinding.type = typeof(SpriteRenderer);
-      //          fspriteBinding.path = "";
-      //          fspriteBinding.propertyName = "m_Sprite";
-
-      //          ObjectReferenceKeyframe[] fspriteReferenceKeyframes = new ObjectReferenceKeyframe[7];
-      //          int i = 0;
-      //          for ( ; i < 7; i++)
-      //          {
-      //              fspriteReferenceKeyframes[i] = new ObjectReferenceKeyframe();
-      //              fspriteReferenceKeyframes[i].time = i / riseAnimationClip.frameRate;
-      //              fspriteReferenceKeyframes[i].value = sprites[i];
-      //          }
+        //        AnimationClip lowerAnimationClip = new AnimationClip();
+        //        lowerAnimationClip.frameRate = 24;
+        //        lowerAnimationClip.wrapMode = WrapMode.Once;
 
 
-      //          EditorCurveBinding dspriteBinding = new EditorCurveBinding();
-      //          dspriteBinding.type = typeof(SpriteRenderer);
-      //          dspriteBinding.path = "";
-      //          dspriteBinding.propertyName = "m_Sprite";
+        //        EditorCurveBinding fspriteBinding = new EditorCurveBinding();
+        //        fspriteBinding.type = typeof(SpriteRenderer);
+        //        fspriteBinding.path = "";
+        //        fspriteBinding.propertyName = "m_Sprite";
 
-      //          ObjectReferenceKeyframe[] dspriteReferenceKeyframes = new ObjectReferenceKeyframe[5];
-
-      //          for (int j = 0; j < 5; j++,i++)
-      //          {
-      //              dspriteReferenceKeyframes[j] = new ObjectReferenceKeyframe();
-      //              dspriteReferenceKeyframes[j].time = j / lowerAnimationClip.frameRate;
-      //              dspriteReferenceKeyframes[j].value = sprites[i];
-      //          }
-
-      //          AnimationUtility.SetObjectReferenceCurve(riseAnimationClip, fspriteBinding, fspriteReferenceKeyframes);
-      //          AnimationUtility.SetObjectReferenceCurve(lowerAnimationClip, dspriteBinding, dspriteReferenceKeyframes);
+        //        ObjectReferenceKeyframe[] fspriteReferenceKeyframes = new ObjectReferenceKeyframe[7];
+        //        int i = 0;
+        //        for (; i < 7; i++)
+        //        {
+        //            fspriteReferenceKeyframes[i] = new ObjectReferenceKeyframe();
+        //            fspriteReferenceKeyframes[i].time = i / riseAnimationClip.frameRate;
+        //            fspriteReferenceKeyframes[i].value = sprites[i];
+        //        }
 
 
-      //          AssetDatabase.CreateAsset(riseAnimationClip, "Assets\\Resources\\" + pathToSaveFolder + "\\" + "RiseShield" + ".anim");
-      //          AssetDatabase.CreateAsset(lowerAnimationClip, "Assets\\Resources\\" + pathToSaveFolder + "\\" + "LowerShield" + ".anim");
-      //          AssetDatabase.SaveAssets();
+        //        EditorCurveBinding dspriteBinding = new EditorCurveBinding();
+        //        dspriteBinding.type = typeof(SpriteRenderer);
+        //        dspriteBinding.path = "";
+        //        dspriteBinding.propertyName = "m_Sprite";
 
-      //          return;
-      //      }
+        //        ObjectReferenceKeyframe[] dspriteReferenceKeyframes = new ObjectReferenceKeyframe[5];
+
+        //        for (int j = 0; j < 5; j++, i++)
+        //        {
+        //            dspriteReferenceKeyframes[j] = new ObjectReferenceKeyframe();
+        //            dspriteReferenceKeyframes[j].time = j / lowerAnimationClip.frameRate;
+        //            dspriteReferenceKeyframes[j].value = sprites[i];
+        //        }
+
+        //        AnimationUtility.SetObjectReferenceCurve(riseAnimationClip, fspriteBinding, fspriteReferenceKeyframes);
+        //        AnimationUtility.SetObjectReferenceCurve(lowerAnimationClip, dspriteBinding, dspriteReferenceKeyframes);
 
 
-      //      AnimationClip animationClip = new AnimationClip();
-      //      animationClip.frameRate = 24;
+        //        AssetDatabase.CreateAsset(riseAnimationClip, "Assets\\Resources\\" + pathToSaveFolder + "\\" + "RiseShield" + ".anim");
+        //        AssetDatabase.CreateAsset(lowerAnimationClip, "Assets\\Resources\\" + pathToSaveFolder + "\\" + "LowerShield" + ".anim");
+        //        AssetDatabase.SaveAssets();
 
-      //      if(animationType == AnimationType.Attack || animationType == AnimationType.Die)
-      //      {
-      //          animationClip.wrapMode = WrapMode.Once;
-      //      }
-
-           
+        //        return;
+        //    }
 
 
-      //      EditorCurveBinding spriteBinding = new EditorCurveBinding();
-      //      spriteBinding.type = typeof(SpriteRenderer);
-      //      spriteBinding.path = "";
-      //      spriteBinding.propertyName = "m_Sprite";
+        //    AnimationClip animationClip = new AnimationClip();
+        //    animationClip.frameRate = 24;
 
-      //      ObjectReferenceKeyframe[] spriteReferenceKeyframes = new ObjectReferenceKeyframe[sprites.Count];
+        //    if (animationType == AnimationType.Attack || animationType == AnimationType.Die)
+        //    {
+        //        animationClip.wrapMode = WrapMode.Once;
+        //    }
 
-      //      for (int i = 0; i < sprites.Count; i++)
-      //      {
-      //          spriteReferenceKeyframes[i] = new ObjectReferenceKeyframe();
-      //          spriteReferenceKeyframes[i].time = i / animationClip.frameRate;
-      //          spriteReferenceKeyframes[i].value = sprites[i];
-      //      }
 
-      //      AnimationUtility.SetObjectReferenceCurve(animationClip, spriteBinding, spriteReferenceKeyframes);
 
-      //      AssetDatabase.CreateAsset(animationClip, "Assets\\Resources\\" + pathToSaveFolder +"\\" + animName+".anim");
-      //      AssetDatabase.SaveAssets();
 
-      //  }
+        //    EditorCurveBinding spriteBinding = new EditorCurveBinding();
+        //    spriteBinding.type = typeof(SpriteRenderer);
+        //    spriteBinding.path = "";
+        //    spriteBinding.propertyName = "m_Sprite";
+
+        //    ObjectReferenceKeyframe[] spriteReferenceKeyframes = new ObjectReferenceKeyframe[sprites.Count];
+
+        //    for (int i = 0; i < sprites.Count; i++)
+        //    {
+        //        spriteReferenceKeyframes[i] = new ObjectReferenceKeyframe();
+        //        spriteReferenceKeyframes[i].time = i / animationClip.frameRate;
+        //        spriteReferenceKeyframes[i].value = sprites[i];
+        //    }
+
+        //    AnimationUtility.SetObjectReferenceCurve(animationClip, spriteBinding, spriteReferenceKeyframes);
+
+        //    AssetDatabase.CreateAsset(animationClip, "Assets\\Resources\\" + pathToSaveFolder + "\\" + animName + ".anim");
+        //    AssetDatabase.SaveAssets();
+
+        //}
 
 
 
@@ -217,24 +217,22 @@ namespace Assets.Scripts.GameManagment
 
        public static AnimationClip[] GetAnimations(string gender,string index)
         {
-
-              
-
+            List<AnimationClip> animations = new List<AnimationClip>();
             string pathToMaleSkins = "Players\\Characters\\hero_" + index + "\\male";
             string pathToFemaleSkins = "Players\\Characters\\hero_" + index + "\\female";
 
             if (gender == "male")
             {
-                return Resources.LoadAll<AnimationClip>(pathToMaleSkins);
-               
+                 animations= Resources.LoadAll<AnimationClip>(pathToMaleSkins).ToList();     
             }
 
             if (gender == "female")
             {
-                return Resources.LoadAll<AnimationClip>(pathToFemaleSkins);
+               animations = Resources.LoadAll<AnimationClip>(pathToFemaleSkins).ToList();              
             }
 
-            return null;
+            return animations.ToArray();
+
         }
     }
 }
